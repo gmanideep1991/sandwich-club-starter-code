@@ -67,8 +67,16 @@ public class DetailActivity extends AppCompatActivity {
     private void populateUI() {
         String aliasString = "";
         for (String alias:sandwich.getAlsoKnownAs()) {
-            aliasString +=alias +",";
+            aliasString += "- "+alias + "\n";
         }
+        String ingridents = "";
+        for(String ingredient:sandwich.getIngredients()){
+            ingridents += "- " + ingredient+"\n";
+        }
+        ingredients_tv.setText(ingridents);
         also_known_as_tv.setText(aliasString);
+        description_tv.setText(sandwich.getDescription());
+        place_of_origin_tv.setText(sandwich.getPlaceOfOrigin());
+
     }
 }
