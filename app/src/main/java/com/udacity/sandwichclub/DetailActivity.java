@@ -11,24 +11,18 @@ import com.squareup.picasso.Picasso;
 import com.udacity.sandwichclub.model.Sandwich;
 import com.udacity.sandwichclub.utils.JsonUtils;
 
+import org.w3c.dom.Text;
+
 public class DetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_POSITION = "extra_position";
     private static final int DEFAULT_POSITION = -1;
-    private TextView also_known_as_tv,ingredients_tv,place_of_origin_tv,description_tv;
-    private Sandwich sandwich;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-
-        ImageView ingredientsIv = findViewById(R.id.image_iv);
-        also_known_as_tv = findViewById(R.id.also_known_tv);
-        ingredients_tv = findViewById(R.id.ingredients_tv);
-        place_of_origin_tv = findViewById(R.id.origin_tv);
-        description_tv = findViewById(R.id.description_tv);
-
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -44,19 +38,15 @@ public class DetailActivity extends AppCompatActivity {
 
         String[] sandwiches = getResources().getStringArray(R.array.sandwich_details);
         String json = sandwiches[position];
-        sandwich = JsonUtils.parseSandwichJson(json);
+        Sandwich sandwich = JsonUtils.parseSandwichJson(json);
         if (sandwich == null) {
             // Sandwich data unavailable
             closeOnError();
             return;
         }
 
-        populateUI();
-        Picasso.with(this)
-                .load(sandwich.getImage())
-                .into(ingredientsIv);
+        populateUI(sandwich);
 
-        setTitle(sandwich.getMainName());
     }
 
     private void closeOnError() {
@@ -64,19 +54,26 @@ public class DetailActivity extends AppCompatActivity {
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
     }
 
-    private void populateUI() {
-        String aliasString = "";
+    private void populateUI(Sandwich sandwich) {
+        TextView also_known_as_tv = findViewById(R.id.also_known_tv);
+        TextView ingredients_tv = findViewById(R.id.ingredients_tv);
+        ImageView ingredientsIv = findViewById(R.id.image_iv);
+        TextView place_of_origin_tv = findViewById(R.id.origin_tv);
+        TextView description_tv = findViewById(R.id.description_tv);
+
+
+        setTitle(sandwich.getMainName());
+        Picasso.with(this)
+                .load(sandwich.getImage())
+                .into(ingredientsIv);
+
         for (String alias:sandwich.getAlsoKnownAs()) {
-            aliasString += "- "+alias + "\n";
+            also_known_as_tv.append("- "+alias + "\n");
         }
-        String ingridents = "";
         for(String ingredient:sandwich.getIngredients()){
-            ingridents += "- " + ingredient+"\n";
+            ingredients_tv.append("- " + ingredient+"\n");
         }
-        ingredients_tv.setText(ingridents);
-        also_known_as_tv.setText(aliasString);
         description_tv.setText(sandwich.getDescription());
         place_of_origin_tv.setText(sandwich.getPlaceOfOrigin());
-
     }
 }

@@ -18,8 +18,8 @@ public class JsonUtils {
         try{
             JSONObject jsonObject = new JSONObject(json);
             JSONObject nameJson = jsonObject.getJSONObject("name");
-            List<String> ingredients = new ArrayList<String>();
-            List<String> alsoKnownAs = new ArrayList<String>();
+            List<String> ingredients = new ArrayList<>();
+            List<String> alsoKnownAs = new ArrayList<>();
             JSONArray ingredientsJsonArray = jsonObject.getJSONArray("ingredients");
             JSONArray aliasJSON = nameJson.getJSONArray("alsoKnownAs");
             for (int i =0;i<ingredientsJsonArray.length();i++) {
